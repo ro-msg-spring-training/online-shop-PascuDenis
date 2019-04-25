@@ -1,31 +1,40 @@
-package ro.msg.learning.shop.model;
+package ro.msg.learning.shop.modelDTO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
-@Entity
+@Data
+@Entity(name = "Customer")
+@Table(name="Customer")
 public class Customer implements Serializable{
     @Id
-    @GeneratedValue
     private Integer customerId;
+    //@Column(name = "FirstName")
     private String firstName;
+    //@Column(name = "LastName")
     private String lastName;
+    //@Column(name = "Username")
     private String username;
+    //@Column(name = "Password")
     private String password;
+    //@Column(name = "EmailAddress")
     private String email;
+//    private List<Order> orderList;
 
     public Customer(){}
 
-    public Customer(Integer customerId, String firstName, String lastName, String username, String password, String email) {
+    public Customer(Integer customerId, String firstName, String lastName, String username, String password, String email, List<Order> orderList) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.email = email;
+//        this.orderList = orderList;
     }
 
     public Integer getCustomerId() {
@@ -76,17 +85,13 @@ public class Customer implements Serializable{
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "customerId=" + customerId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
+//    public List<Order> getOrderList() {
+//        return orderList;
+//    }
+//
+//    public void setOrderList(List<Order> orderList) {
+//        this.orderList = orderList;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -99,10 +104,24 @@ public class Customer implements Serializable{
                 Objects.equals(username, customer.username) &&
                 Objects.equals(password, customer.password) &&
                 Objects.equals(email, customer.email);
+//                Objects.equals(orderList, customer.orderList);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(customerId, firstName, lastName, username, password, email);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+//                ", orderList=" + orderList +
+                '}';
     }
 }

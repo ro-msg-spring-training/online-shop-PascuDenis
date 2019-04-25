@@ -1,15 +1,18 @@
-package ro.msg.learning.shop.model;
+package ro.msg.learning.shop.modelDTO;
+
+import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
+@Data
+@Entity(name = "Location")
+@Table(name = "Location")
 public class Location implements Serializable {
     @Id
-    @GeneratedValue
     private Integer locationId;
     private String name;
     private String addressCountry;

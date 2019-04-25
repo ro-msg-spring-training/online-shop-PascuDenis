@@ -1,27 +1,30 @@
-package ro.msg.learning.shop.model;
+package ro.msg.learning.shop.modelDTO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
-@Entity
+@Data
+@Entity(name = "Revenue")
+@Table(name = "Revenue")
 public class Revenue implements Serializable {
     @Id
-    @GeneratedValue
     private Integer revenueId;
-    private Location location;
+//    @ManyToOne()
+//    @JoinColumn(name = "LocationID", insertable = false, updatable = false)
+    private Integer locationId;
     private Date date;
     private Long sum;
 
     public Revenue() {
     }
 
-    public Revenue(Integer revenueId, Location location, Date date, Long sum) {
+    public Revenue(Integer revenueId, Integer location, Date date, Long sum) {
         this.revenueId = revenueId;
-        this.location = location;
+        this.locationId = location;
         this.date = date;
         this.sum = sum;
     }
@@ -34,12 +37,12 @@ public class Revenue implements Serializable {
         this.revenueId = revenueId;
     }
 
-    public Location getLocation() {
-        return location;
+    public Integer getLocation() {
+        return locationId;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocation(Integer location) {
+        this.locationId = location;
     }
 
     public Date getDate() {
@@ -62,7 +65,7 @@ public class Revenue implements Serializable {
     public String toString() {
         return "Revenue{" +
                 "revenueId=" + revenueId +
-                ", location=" + location +
+                ", locationId=" + locationId +
                 ", date=" + date +
                 ", sum=" + sum +
                 '}';
@@ -74,13 +77,13 @@ public class Revenue implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Revenue revenue = (Revenue) o;
         return Objects.equals(revenueId, revenue.revenueId) &&
-                Objects.equals(location, revenue.location) &&
+                Objects.equals(locationId, revenue.locationId) &&
                 Objects.equals(date, revenue.date) &&
                 Objects.equals(sum, revenue.sum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(revenueId, location, date, sum);
+        return Objects.hash(revenueId, locationId, date, sum);
     }
 }
