@@ -10,6 +10,5 @@ public class ShopApplication {
 		SpringApplication.run(ShopApplication.class, args);
 		System.out.println("merge");
 	}
-
 }
 
