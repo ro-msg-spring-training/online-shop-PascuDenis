@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import ro.msg.learning.shop.dto.ProductCategoryDTO;
 import ro.msg.learning.shop.model.ProductCategory;
 
-public class ProductCategoryMapper extends Mapper<ProductCategory, ProductCategoryDTO> {
+public class ProductCategoryMapper implements Mapper<ProductCategory, ProductCategoryDTO> {
 
     @Override
     public ProductCategory convertToEntity(ProductCategoryDTO dto) {
@@ -15,5 +15,6 @@ public class ProductCategoryMapper extends Mapper<ProductCategory, ProductCatego
     @Override
     public ProductCategoryDTO convertToDto(ProductCategory entity) {
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(entity, ProductCategoryDTO.class);    }
+        return modelMapper.map(entity, ProductCategoryDTO.class);
+    }
 }

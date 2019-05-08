@@ -8,7 +8,7 @@ import ro.msg.learning.shop.model.Supplier;
 
 @Component
 @AllArgsConstructor
-public class SupplierMapper extends Mapper<Supplier, SupplierDTO> {
+public class SupplierMapper implements Mapper<Supplier, SupplierDTO> {
     @Override
     public Supplier convertToEntity(SupplierDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
@@ -18,5 +18,6 @@ public class SupplierMapper extends Mapper<Supplier, SupplierDTO> {
     @Override
     public SupplierDTO convertToDto(Supplier entity) {
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(entity, SupplierDTO.class);    }
+        return modelMapper.map(entity, SupplierDTO.class);
+    }
 }

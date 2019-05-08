@@ -4,9 +4,10 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 
-@Data
+    @Data
 @ToString
 @EqualsAndHashCode
 @Entity(name = "Product")
@@ -29,7 +30,7 @@ public class Product implements Serializable {
 
     @NonNull
     @Column(nullable = false)
-    private Long price;
+    private BigDecimal price;
 
     @NonNull
     @Column(nullable = false)
@@ -50,7 +51,7 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private String imageURL;
 
-    public Product(String name, String description, Long price, double weight, ProductCategory productCategory, Supplier supplier) {
+    public Product(String name, String description, BigDecimal price, Double weight, ProductCategory productCategory, Supplier supplier) {
         this.name = name;
         this.description = description;
         this.price = price;

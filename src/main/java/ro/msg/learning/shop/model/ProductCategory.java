@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -12,7 +13,6 @@ import java.util.Set;
 @Entity(name = "ProductCategory")
 @Table(name = "ProductCategory")
 @NoArgsConstructor
-
 public class ProductCategory implements Serializable {
 
     @Id

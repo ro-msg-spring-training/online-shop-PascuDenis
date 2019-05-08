@@ -1,15 +1,12 @@
 package ro.msg.learning.shop.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
+@Entity(name = "Address")
 @ToString
 @NoArgsConstructor
 @Table(name = "Address")
@@ -41,4 +38,6 @@ public class Address implements Serializable {
         this.county = county;
         this.street = street;
     }
+
+
 }

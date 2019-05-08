@@ -1,7 +1,10 @@
 package ro.msg.learning.shop.exception;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class ProductNotFoundException extends RuntimeException {
-    public ProductNotFoundException(Long id) {
+    public ProductNotFoundException(Integer id) {
         super("Could not found product with id: " + id);
     }
 }

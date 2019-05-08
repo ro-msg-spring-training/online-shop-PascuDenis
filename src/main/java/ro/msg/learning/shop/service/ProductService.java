@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.ProductDTO;
+import ro.msg.learning.shop.exception.ProductNotFoundException;
 import ro.msg.learning.shop.mapping.ProductMapper;
 import ro.msg.learning.shop.model.Product;
 import ro.msg.learning.shop.repository.IProductCategoryRepository;
@@ -23,7 +24,7 @@ public class ProductService implements IService<ProductDTO, Integer> {
     @Override
     @Transactional
     public ProductDTO findOne(Integer id) {
-        Product product = productRepository.findById(id).orElse(null);
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return new ProductMapper(productCategoryRepository, supplierRepository).convertToDto(product);
     }
 

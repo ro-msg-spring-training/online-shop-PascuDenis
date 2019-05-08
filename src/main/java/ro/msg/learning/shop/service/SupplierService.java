@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.SupplierDTO;
+import ro.msg.learning.shop.exception.SupplierNotFoundException;
 import ro.msg.learning.shop.mapping.SupplierMapper;
 import ro.msg.learning.shop.model.Supplier;
 import ro.msg.learning.shop.repository.ISupplierRepository;
@@ -18,7 +19,7 @@ public class SupplierService implements IService<SupplierDTO, Integer> {
     @Override
     @Transactional
     public SupplierDTO findOne(Integer id) {
-        Supplier supplier = supplierRepository.findById(id).orElse(null);
+        Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new SupplierNotFoundException(id));
         return new SupplierMapper().convertToDto(supplier);
 
     }

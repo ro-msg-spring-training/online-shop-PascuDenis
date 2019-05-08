@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @ToString
@@ -28,13 +30,13 @@ public class Revenue implements Serializable {
 
     @NonNull
     @Column(name="Date_", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @NonNull
     @Column(name="Sum_" , nullable = false)
-    private Long sum;
+    private BigDecimal sum;
 
-    public Revenue(Location location, @NonNull Date date, @NonNull Long sum) {
+    public Revenue(Location location, @NonNull LocalDate date, @NonNull BigDecimal sum) {
         this.location = location;
         this.date = date;
         this.sum = sum;
