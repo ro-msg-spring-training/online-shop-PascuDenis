@@ -13,23 +13,23 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     @Id
-    @Column(updatable = false)
+    @Column(updatable = false, name = "AddressId")
     private Integer id;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Country")
     private String country;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "City")
     private String city;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "County")
     private String county;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Street")
     private String street;
 
     public Address(@NonNull String country, @NonNull String city, @NonNull String county, @NonNull String street) {

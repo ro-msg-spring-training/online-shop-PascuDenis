@@ -12,44 +12,29 @@ import java.util.Set;
 
 @Data
 @Entity(name = "Order")
-@Table(name = "Order_")
+@Table(name = "Orders")
 @NoArgsConstructor
 public class Order implements Serializable {
 
     @Id
-    @Column(updatable = false)
+    @Column(updatable = false, name = "OrdersId")
     private Integer id;
 
+    @Column(name = "CreatedAt")
+    private LocalDateTime createdAt;
+
     @ManyToOne(optional = false)
-    @JoinColumn(name = "locationId", referencedColumnName = "id")
+    @JoinColumn(name = "ShippedFrom", referencedColumnName = "LocationId")
     private Location location;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "customerId", referencedColumnName = "id")
+    @JoinColumn(name = "customerId", referencedColumnName = "CustomerId")
     private Customer customer;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "addressId", referencedColumnName = "id")
+    @JoinColumn(name = "addressId", referencedColumnName = "AddressId")
     private Address address;
-
-    @Column(name = "CreateAt")
-    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails;
-
-    public static void main(String[] args) {
-        String now = "2016-11-09 10:30";
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        LocalDateTime formatDateTime = LocalDateTime.parse(now, formatter);
-
-        System.out.println("Before : " + now);
-
-        System.out.println("After : " + formatDateTime);
-
-        System.out.println("After : " + formatDateTime.format(formatter));
-
-    }
 }

@@ -13,16 +13,16 @@ import java.io.Serializable;
 @Table(name = "Location")
 public class Location implements Serializable {
     @Id
-    @Column(updatable = false)
+    @Column(updatable = false, name = "LocationId")
     private Integer id;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Name")
     private String name;
 
     @NonNull
     @ManyToOne(optional = false)
-    @JoinColumn(name = "addressId", referencedColumnName = "id")
+    @JoinColumn(name = "addressId", referencedColumnName = "AddressId")
     private Address address;
 
     public Location(@NonNull String name, @NonNull Address address) {

@@ -6,7 +6,7 @@ import ro.msg.learning.shop.model.Customer;
 
 public class CustomerMapper implements Mapper<Customer, CustomerDTO> {
     @Override
-    public Customer convertToEntity(CustomerDTO dto) {
+     public Customer convertToEntity(CustomerDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(dto, Customer.class);
     }

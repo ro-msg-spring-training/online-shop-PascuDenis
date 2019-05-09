@@ -1,8 +1,8 @@
 package ro.msg.learning.shop.controller;
 
 import lombok.AllArgsConstructor;
-//import org.apache.log4j.LogManager;
-//import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.dto.ProductDTO;
@@ -18,7 +18,7 @@ public class ProductController implements IController<ProductDTO, Integer>{
 
     @Autowired
     private final ProductService productService;
-//    private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
+    private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
 
     @Override
     @GetMapping("/products/{id}")
@@ -26,7 +26,7 @@ public class ProductController implements IController<ProductDTO, Integer>{
         try {
             return productService.findOne(id);
         } catch (ProductNotFoundException e) {
-//            logger.info(e.getMessage());
+            logger.info(e.getMessage());
         }
         return null;
     }
@@ -51,7 +51,7 @@ public class ProductController implements IController<ProductDTO, Integer>{
 
     @Override
     @DeleteMapping("/products/{id}")
-    public void remove(Integer id) {
+    public void remove(@PathVariable Integer id) {
         productService.remove(id);
     }
 }

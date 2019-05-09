@@ -17,31 +17,31 @@ import java.util.List;
 public class Customer implements Serializable{
 
     @Id
-    @Column(updatable = false)
+    @Column(updatable = false, name = "CustomerId")
     private Integer id;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "FirstName")
     //@Column(name = "FirstName")
     private String firstName;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "LastName")
     //@Column(name = "LastName")
     private String lastName;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Username")
     //@Column(name = "Username")
     private String username;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Password")
     //@Column(name = "Password")
     private String password;
 
     @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "EmailAddress")
     //@Column(name = "EmailAddress")
     private String email;
 

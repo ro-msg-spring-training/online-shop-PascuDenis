@@ -55,12 +55,12 @@ CREATE TABLE IF NOT EXISTS Product (
 );
 
 CREATE TABLE IF NOT EXISTS Stock(
+    StockId INT auto_increment PRIMARY KEY,
     ProductID INT NOT NULL,
     LocationID INT NOT NULL,
     Quantity INT NOT NULL,
     FOREIGN KEY (ProductId) REFERENCES Product(ProductId),
-    FOREIGN KEY (LocationId) REFERENCES Location(LocationId),
-    CONSTRAINT StockId PRIMARY KEY (ProductId, LocationId)
+    FOREIGN KEY (LocationId) REFERENCES Location(LocationId)
 );
 
 CREATE TABLE IF NOT EXISTS Orders(

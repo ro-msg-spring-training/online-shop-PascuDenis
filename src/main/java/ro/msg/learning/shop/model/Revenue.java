@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Data
@@ -19,13 +18,11 @@ import java.time.LocalDate;
 public class Revenue implements Serializable {
 
     @Id
-    @Column(updatable = false)
+    @Column(updatable = false, name = "RevenueId")
     private Integer id;
-//    @ManyToOne()
-//    @JoinColumn(name = "LocationID", insertable = false, updatable = false)
 
     @ManyToOne
-    @JoinColumn(name = "locationId", referencedColumnName = "id")
+    @JoinColumn(name = "locationId", referencedColumnName = "LocationId")
     private Location location;
 
     @NonNull

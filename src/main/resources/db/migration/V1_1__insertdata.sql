@@ -49,12 +49,12 @@ INSERT INTO Product(ProductId, Name,Description, Price, Weight, ProductCategoryI
 (4, 'Name04','Description04', 54,31,1,5,'Url04'),
 (5, 'Name05','Description05', 63,22,1,1,'Url05');
 
-INSERT INTO Stock(ProductId,LocationId, Quantity) VALUES
-(1,1,65),
-(2,2,55),
-(3,2,44),
-(4,3,32),
-(1,4,12);
+INSERT INTO Stock(StockId, ProductId, LocationId, Quantity) VALUES
+(1, 1,1,65),
+(2, 2,2,55),
+(3, 3,2,44),
+(4, 4,3,32),
+(5, 1,4,12);
 
 INSERT INTO Orders(OrdersId, ShippedFrom, CustomerId, AddressId, CreatedAt) VALUES
 (1, 1, 2, 1, '2015-11-13'),
