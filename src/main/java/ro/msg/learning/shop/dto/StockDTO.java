@@ -10,6 +10,7 @@ import ro.msg.learning.shop.model.Product;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockDTO {
+    private Integer id;
     private Integer quantity;
     private Integer productId;
     private Integer locationId;

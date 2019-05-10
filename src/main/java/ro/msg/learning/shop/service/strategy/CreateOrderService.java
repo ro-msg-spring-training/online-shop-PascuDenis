@@ -1,9 +1,9 @@
 package ro.msg.learning.shop.service.strategy;
 
 public class CreateOrderService {
-    private LocationStrategy strategy;
+    private FindLocationStrategy strategy;
 
-    public CreateOrderService(LocationStrategy strategy) {
+    public CreateOrderService(FindLocationStrategy strategy) {
         this.strategy = strategy;
     }
 }

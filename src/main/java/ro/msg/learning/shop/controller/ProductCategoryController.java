@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import ro.msg.learning.shop.dto.ProductCategoryDTO;
 import ro.msg.learning.shop.exception.ProductCartegoryNotFoundException;
-import ro.msg.learning.shop.service.ProductCatrgoryService;
+import ro.msg.learning.shop.service.ProductCategoryService;
 
 import java.util.List;
 
@@ -18,7 +16,7 @@ import java.util.List;
 public class ProductCategoryController implements IController<ProductCategoryDTO, Integer> {
 
     @Autowired
-    private final ProductCatrgoryService productCatrgoryService;
+    private final ProductCategoryService productCatrgoryService;
 
     @Override
     @GetMapping("/productCategory/{id}")

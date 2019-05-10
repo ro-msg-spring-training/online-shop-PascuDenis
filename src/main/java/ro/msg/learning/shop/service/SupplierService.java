@@ -10,6 +10,8 @@ import ro.msg.learning.shop.model.Supplier;
 import ro.msg.learning.shop.repository.ISupplierRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +29,10 @@ public class SupplierService implements IService<SupplierDTO, Integer> {
     @Override
     @Transactional
     public List<SupplierDTO> findAll() {
-        return (List)supplierRepository.findAll();
+
+        SupplierMapper mapper = new SupplierMapper();
+        return StreamSupport.stream(supplierRepository.findAll().spliterator(), false).map(mapper::convertToDto).
+                collect(Collectors.toList());
     }
 
     @Override
@@ -40,8 +45,15 @@ public class SupplierService implements IService<SupplierDTO, Integer> {
     @Override
     @Transactional
     public SupplierDTO update(SupplierDTO entity) {
-        //TODO
-        return null;
+        Supplier supplierToUpdate = supplierRepository.findById(entity.getId()).orElseThrow(() -> new SupplierNotFoundException(entity.getId()));
+
+        if (entity.getName() != null && !entity.getName().equals(supplierToUpdate.getName())) {
+            supplierToUpdate.setName(entity.getName());
+        }
+
+
+        Supplier updatedSupplier = supplierRepository.save(supplierToUpdate);
+        return new SupplierMapper().convertToDto(updatedSupplier);
     }
 
     @Override

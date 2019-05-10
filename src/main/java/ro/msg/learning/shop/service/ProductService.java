@@ -76,8 +76,8 @@ public class ProductService implements IService<ProductDTO, Integer> {
         }
 
         if (entity.getSupplierId()!= null) {
-            Optional<Supplier> productCategory = supplierRepository.findById(entity.getSupplierId());
-            productCategory.ifPresent(productToUpdate::setSupplier);
+            Optional<Supplier> suplier = supplierRepository.findById(entity.getSupplierId());
+            suplier.ifPresent(productToUpdate::setSupplier);
         }
 
         Product updatedProduct = productRepository.save(productToUpdate);

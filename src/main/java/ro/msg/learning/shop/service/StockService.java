@@ -1,0 +1,90 @@
+package ro.msg.learning.shop.service;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.dto.ProductDTO;
+import ro.msg.learning.shop.dto.StockDTO;
+import ro.msg.learning.shop.exception.StockNotFoundException;
+import ro.msg.learning.shop.mapping.StockMapper;
+import ro.msg.learning.shop.model.*;
+import ro.msg.learning.shop.repository.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@Service
+@AllArgsConstructor
+public class StockService implements IService<StockDTO, Integer> {
+    IAddressRepository addressRepository;
+    ILocationRepository locationRepository;
+    IProductRepository productRepository;
+    IProductCategoryRepository productCategoryRepository;
+    IStockRepository stockRepository;
+    ISupplierRepository supplierRepository;
+
+    @Override
+    @Transactional
+    public StockDTO findOne(Integer id) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> new StockNotFoundException(id));
+        return new StockMapper(locationRepository, productRepository).convertToDto(stock);
+    }
+
+    @Override
+    @Transactional
+    public List<StockDTO> findAll() {
+        StockMapper mapper = new StockMapper(locationRepository, productRepository);
+        return StreamSupport.stream(stockRepository.findAll().spliterator(), false).map(mapper::convertToDto).
+                collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public StockDTO save(StockDTO entity) {
+        Stock stockToSave = new StockMapper(locationRepository, productRepository).convertToEntity(entity);
+        Stock stock = stockRepository.save(stockToSave);
+        return new StockMapper(locationRepository, productRepository).convertToDto(stock);
+    }
+
+    @Override
+    @Transactional
+    public StockDTO update(StockDTO entity) {
+        Stock stockToUpdate = stockRepository.findById(entity.getId()).orElseThrow(() -> new StockNotFoundException(entity.getId()));
+
+        if (entity.getQuantity() != null && !entity.getQuantity().equals(stockToUpdate.getQuantity())) {
+            stockToUpdate.setQuantity(entity.getQuantity());
+        }
+
+        if (entity.getLocationId() != null) {
+            Optional<Location> location = locationRepository.findById(entity.getLocationId());
+            location.ifPresent(stockToUpdate::setLocation);
+        }
+
+        if (entity.getProductId() != null) {
+            Optional<Product> product = productRepository.findById(entity.getProductId());
+            product.ifPresent(stockToUpdate::setProduct);
+        }
+
+        Stock updatedStock = stockRepository.save(stockToUpdate);
+        return new StockMapper(locationRepository, productRepository).convertToDto(updatedStock);
+    }
+
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        stockRepository.deleteById(id);
+    }
+
+    @Transactional
+    public StockDTO getStockWithRequiredQuantityForOneProduct (ProductDTO product, Integer quantity){
+        List<StockDTO> stocks = findAll();
+        for(StockDTO stock : stocks) {
+            if (stock.getProductId().equals(product.getId()) && stock.getQuantity() >= quantity) {
+                return stock;
+            }
+        }
+        return null;
+    }
+}

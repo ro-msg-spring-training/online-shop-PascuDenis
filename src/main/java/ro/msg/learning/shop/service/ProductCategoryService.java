@@ -10,10 +10,12 @@ import ro.msg.learning.shop.model.ProductCategory;
 import ro.msg.learning.shop.repository.IProductCategoryRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
-public class ProductCatrgoryService implements IService<ProductCategoryDTO, Integer> {
+public class ProductCategoryService implements IService<ProductCategoryDTO, Integer> {
     private IProductCategoryRepository productCategoryRepository;
 
     @Override
@@ -26,7 +28,10 @@ public class ProductCatrgoryService implements IService<ProductCategoryDTO, Inte
     @Override
     @Transactional
     public List<ProductCategoryDTO> findAll() {
-        return (List)productCategoryRepository.findAll();
+
+        ProductCategoryMapper mapper = new ProductCategoryMapper();
+        return StreamSupport.stream(productCategoryRepository.findAll().spliterator(), false).map(mapper::convertToDto).
+                collect(Collectors.toList());
     }
 
     @Override
@@ -39,8 +44,20 @@ public class ProductCatrgoryService implements IService<ProductCategoryDTO, Inte
     @Override
     @Transactional
     public ProductCategoryDTO update(ProductCategoryDTO entity) {
-        //TODO
-        return null;
+
+        ProductCategory productCategoryToUpdate = productCategoryRepository.findById(entity.getId()).orElseThrow(() -> new ProductCartegoryNotFoundException(entity.getId()));
+
+        if (entity.getName() != null && !entity.getName().equals(productCategoryToUpdate.getName())){
+            productCategoryToUpdate.setName(entity.getName());
+        }
+
+        if (!entity.getDescription().equals(productCategoryToUpdate.getDescription())){
+            productCategoryToUpdate.setDescription(entity.getDescription());
+        }
+
+
+        ProductCategory updatedProductCategory = productCategoryRepository.save(productCategoryToUpdate);
+        return new ProductCategoryMapper().convertToDto(updatedProductCategory);
     }
 
     @Override
