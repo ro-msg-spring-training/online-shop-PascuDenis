@@ -3,9 +3,11 @@ package ro.msg.learning.shop.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.dto.LocationDTO;
 import ro.msg.learning.shop.dto.ProductDTO;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.exception.StockNotFoundException;
+import ro.msg.learning.shop.mapping.LocationMapper;
 import ro.msg.learning.shop.mapping.StockMapper;
 import ro.msg.learning.shop.model.*;
 import ro.msg.learning.shop.repository.*;
@@ -87,4 +89,6 @@ public class StockService implements IService<StockDTO, Integer> {
         }
         return null;
     }
+
+
 }
