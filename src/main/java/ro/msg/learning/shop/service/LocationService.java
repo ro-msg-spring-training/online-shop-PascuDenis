@@ -50,11 +50,11 @@ public class LocationService implements IService<LocationDTO, Integer> {
     public LocationDTO update(LocationDTO entity) {
         Location locationToUpdate = locationRepository.findById(entity.getId()).orElseThrow(() -> new LocationNotFoundException(entity.getId()));
 
-        if (entity.getName() != null && !entity.getName().equals(locationToUpdate.getName())){
+        if (entity.getName() != null && !entity.getName().equals(locationToUpdate.getName())) {
             locationToUpdate.setName(entity.getName());
         }
 
-        if (entity.getAddress()!= null) {
+        if (entity.getAddress() != null) {
             Optional<Address> address = addressRepository.findById(entity.getAddressId());
             address.ifPresent(locationToUpdate::setAddress);
         }

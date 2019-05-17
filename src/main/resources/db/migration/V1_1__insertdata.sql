@@ -50,11 +50,26 @@ INSERT INTO Product(ProductId, Name,Description, Price, Weight, ProductCategoryI
 (5, 'Name05','Description05', 63,22,1,1,'Url05');
 
 INSERT INTO Stock(StockId, ProductId, LocationId, Quantity) VALUES
-(1, 1,1,65),
-(2, 2,2,55),
-(3, 3,2,44),
-(4, 4,3,32),
-(5, 1,4,12);
+(1, 1,1,61),
+(2, 1,2,62),
+(3, 1,3,63),
+(4, 1,4,64),
+(5, 2,1,65),
+(6, 2,2,66),
+(7, 2,3,67),
+(8, 3,1,68),
+(9, 3,2,69),
+(10, 3,3,70),
+(11, 4,1,41),
+(12, 4,2,42),
+(13, 4,3,43),
+(14, 4,4,44),
+(15, 4,5,45),
+(16, 5,1,46),
+(17, 5,2,47),
+(18, 5,3,48),
+(19, 5,4,49),
+(20, 5,5,50);
 
 INSERT INTO Orders(OrdersId, ShippedFrom, CustomerId, AddressId, CreatedAt) VALUES
 (1, 1, 2, 1, '2015-11-13'),

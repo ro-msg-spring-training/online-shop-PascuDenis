@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@ToString(exclude = {"product", "location"})
+//@ToString(exclude = {"product", "location"})
+@ToString
 @EqualsAndHashCode(exclude = {"product", "location"})
 @Entity
 @NoArgsConstructor

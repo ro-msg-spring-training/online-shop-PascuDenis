@@ -15,6 +15,18 @@ public class StockDTO {
     private Integer productId;
     private Integer locationId;
 
+    public StockDTO(Integer productId, Integer quantity, Integer locationId) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.locationId = locationId;
+    }
+
+    public StockDTO(Integer productId, Integer quantity, Location location) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.location = location;
+    }
+
     private Product product;
     private Location location;
 }

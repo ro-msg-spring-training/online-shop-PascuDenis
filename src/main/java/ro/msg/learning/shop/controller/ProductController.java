@@ -1,6 +1,5 @@
 package ro.msg.learning.shop.controller;
 
-import lombok.AllArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +11,15 @@ import ro.msg.learning.shop.service.ProductService;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
-//@RequestMapping("/products")
 public class ProductController implements IController<ProductDTO, Integer>{
 
-    @Autowired
     private final ProductService productService;
     private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
+
+    @Autowired
+    public ProductController(ProductService productService){
+        this.productService = productService;
+    }
 
     @Override
     @GetMapping("/products/{id}")

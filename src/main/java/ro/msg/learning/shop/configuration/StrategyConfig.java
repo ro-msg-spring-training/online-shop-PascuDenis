@@ -6,19 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import ro.msg.learning.shop.service.strategy.FindLocationStrategy;
 import ro.msg.learning.shop.service.strategy.MostAbundantLocation;
 import ro.msg.learning.shop.service.strategy.SingleLocation;
+import ro.msg.learning.shop.service.strategy.StrategyTypes;
 
 @Configuration
 public class StrategyConfig {
-
-    @Value("${strategy.type}")
-    private String strategy;
-
     @Bean
-    public FindLocationStrategy chooseStrategy(){
-        switch (strategy){
-            case "SingleLocation":
+    public FindLocationStrategy chooseStrategy(@Value("${strategy.type}") StrategyTypes strategy) {
+        switch (strategy) {
+            case SINGLELOCATION:
                 return new SingleLocation();
-            case "MostAbundantLocation":
+            case MOSTABUNDANTLOCATION:
                 return new MostAbundantLocation();
         }
         return null;

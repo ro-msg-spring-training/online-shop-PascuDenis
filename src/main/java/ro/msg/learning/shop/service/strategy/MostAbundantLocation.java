@@ -1,61 +1,45 @@
 package ro.msg.learning.shop.service.strategy;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.*;
-import ro.msg.learning.shop.mapping.LocationMapper;
-import ro.msg.learning.shop.model.Product;
-import ro.msg.learning.shop.service.LocationService;
-import ro.msg.learning.shop.service.ProductService;
-import ro.msg.learning.shop.service.StockService;
+import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
+import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
+import ro.msg.learning.shop.exception.StockNotFoundException;
+import ro.msg.learning.shop.model.*;
+import ro.msg.learning.shop.repository.IStockRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class MostAbundantLocation implements FindLocationStrategy {
+    //TODO: use constructor injection
+
     @Autowired
-    private ProductService productService;
-    @Autowired
-    private StockService stockService;
+    private IStockRepository stockRepository;
 
-    @Override
-    @Transactional
-    public List<StockDTO> searchLocation(OrderInputDTO orderInputDTO) {
-        //TODO: potential buggy method
-        List<StockDTO> foundStockList = stockService.findAll();
 
-//        for (StockDTO stock : stocks) {
-//            for (Map.Entry<ProductDTO, Integer> product : products.entrySet()) {
-//                if (stock.getProductId().equals(product.getKey().getId()) && (stock.getQuantity() >= product.getValue())){
-//                    stocks.add(stock);
-//                }
-//            }
-//        }
-        List<ProductOrderInputDTO> productOrderInputDTOS = orderInputDTO.getProductInputList();
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        for (ProductOrderInputDTO product : productOrderInputDTOS){
-            productDTOS.add(productService.findOne(product.getProductId()));
+    private Location locationsWithMaxQuantityForOneProduct(ProductOrderInputDTO product) {
+        Location productLocation = stockRepository.getLocationWithMaximumQuantityForOneProduct(product.getProductId(), product.getQuantity());
+        if (productLocation == null) {
+            throw new StockNotFoundException(product.getProductId());
         }
-
-        for (ProductDTO product : productDTOS) {
-            foundStockList.add(getLocationWithMaxQuantityForOneProduct(product));
-        }
-        return foundStockList;
+        return productLocation;
     }
 
     @Transactional
-    private StockDTO getLocationWithMaxQuantityForOneProduct(ProductDTO product) {
-        int max = 0;
-        StockDTO maxStock = null;
+    @Override
+    public List<StockDTO> searchLocation(OrderInputDTO order) {
+        List<StockDTO> productsStockToReturn = new ArrayList<>();
 
-        for (StockDTO stock : stockService.findAll()) {
-            if (stock.getProductId().equals(product.getId()) && stock.getQuantity() > max) {
-                max = stock.getQuantity();
-                maxStock = stock;
-            }
+        for(ProductOrderInputDTO product : order.getProductInputList()){
+            StockDTO foundStock = new StockDTO(product.getProductId(), product.getQuantity(), locationsWithMaxQuantityForOneProduct(product).getId());
+            productsStockToReturn.add(foundStock);
         }
-        return maxStock;
+        return productsStockToReturn;
     }
 }

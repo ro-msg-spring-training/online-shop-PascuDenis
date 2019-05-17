@@ -3,11 +3,8 @@ package ro.msg.learning.shop.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.msg.learning.shop.dto.LocationDTO;
-import ro.msg.learning.shop.dto.ProductDTO;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.exception.StockNotFoundException;
-import ro.msg.learning.shop.mapping.LocationMapper;
 import ro.msg.learning.shop.mapping.StockMapper;
 import ro.msg.learning.shop.model.*;
 import ro.msg.learning.shop.repository.*;
@@ -80,15 +77,46 @@ public class StockService implements IService<StockDTO, Integer> {
     }
 
     @Transactional
-    public StockDTO getStockWithRequiredQuantityForOneProduct (ProductDTO product, Integer quantity){
-        List<StockDTO> stocks = findAll();
-        for(StockDTO stock : stocks) {
-            if (stock.getProductId().equals(product.getId()) && stock.getQuantity() >= quantity) {
-                return stock;
-            }
+    public void findAllLocations(Integer productId, Integer quantity){
+        List<Stock> stocks = stockRepository.findStockLocationsForOneProduct(productId, quantity);
+        for(Stock s : stocks){
+            System.out.println(s);
         }
-        return null;
     }
+
+    @Transactional
+    public List<Stock> findAllStocks(){
+        List<Stock> stocks = stockRepository.findAllStocks();
+        for (Stock s : stocks){
+            System.out.println(s);
+        }
+        return stocks;
+    }
+
+    public void findLocationWithMaxQuantity(Integer productId, Integer quantity){
+        System.out.println(stockRepository.getLocationWithMaximumQuantityForOneProduct(productId, quantity));
+    }
+//    @Transactional
+//    public boolean getStockWithMaxQuantityForOneProduct(Integer stockId, Integer productId, Integer quantity) {
+////        for(StockDTO stock : stocks) {
+////            if (stock.getProductId().equals(product.getId()) && stock.getQuantity() >= quantity) {
+////                return stock;
+////            }
+////        }
+//
+//        StockDTO foundStocks = findOne(stockId);
+//
+//        for (StockDTO stock : stocks) {
+//            if (stock.getProductId().equals(productId) && stock.getQuantity() >= quantity) {
+//                maxQuantity = stock.getQuantity();
+//                foundStocks = stock;
+//            }
+//        }
+//
+//        if (maxQuantity == -1)
+//            throw new ProductInStockNotFoundException(productId);
+//        return foundStocks;
+//    }
 
 
 }

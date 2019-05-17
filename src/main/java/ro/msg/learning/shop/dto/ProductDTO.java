@@ -33,4 +33,6 @@ public class ProductDTO {
 
     private ProductCategory productCategory;
     private Supplier supplier;
+
+
 }

@@ -1,10 +1,7 @@
 package ro.msg.learning.shop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,9 +12,12 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity(name = "Customer")
 @Table(name="Customer")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer implements Serializable{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, name = "CustomerId")
     private Integer id;
 
@@ -50,10 +50,7 @@ public class Customer implements Serializable{
     @JsonIgnore
     private List<Order> orders;
 
-    public Customer(){}
-
-    public Customer(Integer id, String firstName, String lastName, String username, String password, String email, List<Order> orderList) {
-        this.id = id;
+    public Customer(String firstName, String lastName, String username, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;

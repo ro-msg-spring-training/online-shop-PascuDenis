@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.dto;
+package ro.msg.learning.shop.dto.orderinput;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderInputDTO {
-    private LocalDateTime timestamp;
+//    private LocalDateTime timestamp;
     private Address address;
     private List<ProductOrderInputDTO> productInputList;
 }

@@ -39,7 +39,7 @@ public class ProductService implements IService<ProductDTO, Integer> {
         ProductMapper mapper = new ProductMapper(productCategoryRepository, supplierRepository);
         return StreamSupport.stream(productRepository.findAll().spliterator(), false).map(mapper::convertToDto).
                 collect(Collectors.toList());
-}
+    }
 
     @Override
     @Transactional
@@ -54,28 +54,28 @@ public class ProductService implements IService<ProductDTO, Integer> {
     public ProductDTO update(ProductDTO entity) {
         Product productToUpdate = productRepository.findById(entity.getId()).orElseThrow(() -> new ProductNotFoundException(entity.getId()));
 
-        if (entity.getName() != null && !entity.getName().equals(productToUpdate.getName())){
+        if (entity.getName() != null && !entity.getName().equals(productToUpdate.getName())) {
             productToUpdate.setName(entity.getName());
         }
 
-        if (!entity.getDescription().equals(productToUpdate.getDescription())){
+        if (!entity.getDescription().equals(productToUpdate.getDescription())) {
             productToUpdate.setDescription(entity.getDescription());
         }
 
-        if (entity.getPrice() != null && !entity.getPrice().equals(productToUpdate.getPrice())){
+        if (entity.getPrice() != null && !entity.getPrice().equals(productToUpdate.getPrice())) {
             productToUpdate.setPrice(entity.getPrice());
         }
 
-        if (entity.getWeight() != null && !entity.getWeight().equals(productToUpdate.getWeight())){
+        if (entity.getWeight() != null && !entity.getWeight().equals(productToUpdate.getWeight())) {
             productToUpdate.setWeight(entity.getWeight());
         }
 
-        if (entity.getProductCategoryId()!= null) {
+        if (entity.getProductCategoryId() != null) {
             Optional<ProductCategory> productCategory = productCategoryRepository.findById(entity.getProductCategoryId());
             productCategory.ifPresent(productToUpdate::setProductCategory);
         }
 
-        if (entity.getSupplierId()!= null) {
+        if (entity.getSupplierId() != null) {
             Optional<Supplier> suplier = supplierRepository.findById(entity.getSupplierId());
             suplier.ifPresent(productToUpdate::setSupplier);
         }
@@ -89,4 +89,5 @@ public class ProductService implements IService<ProductDTO, Integer> {
     public void remove(Integer id) {
         productRepository.deleteById(id);
     }
+
 }
