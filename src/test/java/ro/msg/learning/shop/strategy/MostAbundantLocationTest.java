@@ -3,27 +3,27 @@ package ro.msg.learning.shop.strategy;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import ro.msg.learning.shop.ShopApplication;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
+import ro.msg.learning.shop.exception.StockNotFoundException;
 import ro.msg.learning.shop.repository.IStockRepository;
-import ro.msg.learning.shop.service.OrderService;
-import ro.msg.learning.shop.service.strategy.FindLocationStrategy;
 import ro.msg.learning.shop.service.strategy.MostAbundantLocation;
-import ro.msg.learning.shop.service.strategy.StrategyTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = ShopApplication.class)
+@ActiveProfiles("test")
 public class MostAbundantLocationTest {
     @Mock
     private IStockRepository stockRepository;
@@ -55,14 +55,19 @@ public class MostAbundantLocationTest {
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
 
         List<StockDTO> stocks = strategy.searchLocation(inputOrder);
-//        assert (stocks != null);
-        Assertions.assertThat(stocks!=null);
+        Assertions.assertThat(stocks).isNotEqualTo(null);
+        System.out.println("Successfully created an order with most abundant location strategy");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void singleLocationFail() {
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
-
-        strategy.searchLocation(inputOrder);
+        try {
+            strategy.searchLocation(inputOrder);
+        } catch (StockNotFoundException e){
+            System.out.println("Failed to create an order with most abundant location strategy");
+        } catch (RuntimeException e){
+            System.out.println("Some other error occurred");
+        }
     }
 }

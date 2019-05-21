@@ -1,32 +1,27 @@
 package ro.msg.learning.shop.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.test.web.servlet.MockMvc;
-import ro.msg.learning.shop.configuration.SomeOrderConfig;
+import ro.msg.learning.shop.ShopApplication;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
 import ro.msg.learning.shop.exception.StockNotFoundException;
 import ro.msg.learning.shop.model.Order;
-import ro.msg.learning.shop.repository.IOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @RunWith(SpringRunner.class)
-//@WebAppConfiguration
+@SpringBootTest(classes = ShopApplication.class)
 @Configuration
-//@ComponentScan("ro.msg.learning.shop.repository")
 public class CreateOrderIntegrationTest {
 
     @Mock
@@ -55,11 +50,13 @@ public class CreateOrderIntegrationTest {
 
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
 
-//        for (OrderDTO o : orderService.findAll()){
-//            System.out.println(o);
-//        }
+        for (OrderDTO o : orderService.findAll()){
+            System.out.println(o);
+        }
         Order order = orderService.createOrder(inputOrder);
-        assert (order != null);
+        Assertions.assertThat(order).isNotEqualTo(null);
+        System.out.println("Successfully created an order");
+
     }
 
     @Test
@@ -82,8 +79,10 @@ public class CreateOrderIntegrationTest {
             }
             Order order = orderService.createOrder(inputOrder);
             assert (order != null);
-        } catch (StockNotFoundException | AssertionError e) {
-            System.out.println(e);
+        } catch (StockNotFoundException e) {
+            System.out.println("Failed to create an order due to missing stocks");
+        } catch (RuntimeException e){
+            System.out.println("Some other error occurred");
         }
     }
 }

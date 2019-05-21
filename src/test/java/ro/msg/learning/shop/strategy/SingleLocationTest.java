@@ -9,8 +9,8 @@ import org.mockito.MockitoAnnotations;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
+import ro.msg.learning.shop.exception.StockNotFoundException;
 import ro.msg.learning.shop.repository.IStockRepository;
-import ro.msg.learning.shop.service.strategy.MostAbundantLocation;
 import ro.msg.learning.shop.service.strategy.SingleLocation;
 
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ public class SingleLocationTest {
     private ProductOrderInputDTO inputProduct3;
 
     private List<ProductOrderInputDTO> inputProducts;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -47,14 +48,20 @@ public class SingleLocationTest {
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
 
         List<StockDTO> stocks = strategy.searchLocation(inputOrder);
-//        assert (stocks != null);
-        Assertions.assertThat(stocks!=null);
+        Assertions.assertThat(stocks).isNotEqualTo(null);
+        System.out.println("Successfully created an order with simple location strategy");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void singleLocationFail() {
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
+        try {
+            strategy.searchLocation(inputOrder);
+        } catch (StockNotFoundException e){
+            System.out.println("Failed to create an order with single location strategy");
+        }catch (RuntimeException e){
+            System.out.println("Some other error occurred");
+        }
 
-        strategy.searchLocation(inputOrder);
     }
 }
