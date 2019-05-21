@@ -14,8 +14,11 @@ public interface IStockRepository extends CrudRepository<Stock, Integer> {
     @Query("SELECT s FROM Stock s")
     List<Stock> findAllStocks();
 
-    @Query("SELECT s.id FROM Stock s WHERE s.location.id = ?1")
-    Stock getStockIdForProductWithLocation(Integer locationId);
+    @Query("SELECT s.id FROM Stock s WHERE s.product.id = ?1 AND s.location.id = ?2")
+    Integer findStockIdAfterProductIdAndLocationId(Integer productId, Integer locationId);
+
+    @Query("SELECT s FROM Stock s WHERE s.location.id = ?1")
+    Stock getStockForProductWithLocation(Integer locationId);
 
     @Query(
 //            "SELECT s FROM Stock s, Location l WHERE " +

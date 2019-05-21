@@ -1,6 +1,6 @@
 package ro.msg.learning.shop.service;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.LocationDTO;
@@ -16,10 +16,15 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-@AllArgsConstructor
 public class LocationService implements IService<LocationDTO, Integer> {
-    private ILocationRepository locationRepository;
-    private IAddressRepository addressRepository;
+    private final ILocationRepository locationRepository;
+    private final IAddressRepository addressRepository;
+
+    @Autowired
+    public LocationService(ILocationRepository locationRepository, IAddressRepository addressRepository) {
+        this.locationRepository = locationRepository;
+        this.addressRepository = addressRepository;
+    }
 
     @Override
     @Transactional

@@ -1,7 +1,10 @@
 package ro.msg.learning.shop.controller;
 
-import lombok.AllArgsConstructor;
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.dto.SupplierDTO;
 import ro.msg.learning.shop.exception.SupplierNotFoundException;
@@ -9,21 +12,24 @@ import ro.msg.learning.shop.service.SupplierService;
 
 import java.util.List;
 
-//@RestController
-@AllArgsConstructor
 //@RequestMapping("/supplier")
 public class SupplierController implements IController<SupplierDTO, Integer> {
 
-    @Autowired
     private final SupplierService supplierService;
+    private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
+
+    @Autowired
+    public SupplierController(SupplierService supplierService) {
+        this.supplierService = supplierService;
+    }
 
     @Override
     @GetMapping("/supplier/{id}")
-    public SupplierDTO getOne(@PathVariable Integer id) {
+    public ResponseEntity<SupplierDTO> getOne(@PathVariable Integer id) {
         try {
-            return supplierService.findOne(id);
+            return new ResponseEntity<>(supplierService.findOne(id), HttpStatus.OK);
         } catch (SupplierNotFoundException e) {
-            e.printStackTrace();
+            logger.info(e);
         }
         return null;
     }
@@ -31,7 +37,7 @@ public class SupplierController implements IController<SupplierDTO, Integer> {
     @Override
     @GetMapping("/supplier")
     public List<SupplierDTO> getAll() {
-            return supplierService.findAll();
+        return supplierService.findAll();
     }
 
     @Override

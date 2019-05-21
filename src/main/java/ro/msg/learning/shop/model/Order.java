@@ -2,9 +2,7 @@ package ro.msg.learning.shop.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@ToString(exclude = {"customer", "address", "orderDetails"})
+@EqualsAndHashCode(exclude = {"customer", "location", "address", "orderDetails"})
 @Entity(name = "Order")
 @Table(name = "Orders")
 @AllArgsConstructor

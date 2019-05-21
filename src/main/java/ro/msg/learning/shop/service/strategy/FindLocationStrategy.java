@@ -9,5 +9,5 @@ import java.util.List;
 
 @Component
 public interface FindLocationStrategy {
-    List<StockDTO > searchLocation(OrderInputDTO order);
+    List<StockDTO> searchLocation(OrderInputDTO order);
 }

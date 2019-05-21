@@ -1,6 +1,6 @@
 package ro.msg.learning.shop.service;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.ProductDTO;
@@ -13,18 +13,23 @@ import ro.msg.learning.shop.repository.IProductCategoryRepository;
 import ro.msg.learning.shop.repository.IProductRepository;
 import ro.msg.learning.shop.repository.ISupplierRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
-@AllArgsConstructor
 public class ProductService implements IService<ProductDTO, Integer> {
 
-    private IProductRepository productRepository;
-    private ISupplierRepository supplierRepository;
-    private IProductCategoryRepository productCategoryRepository;
+    private final IProductRepository productRepository;
+    private final ISupplierRepository supplierRepository;
+    private final IProductCategoryRepository productCategoryRepository;
+
+    @Autowired
+    public ProductService(IProductRepository productRepository, ISupplierRepository supplierRepository, IProductCategoryRepository productCategoryRepository) {
+        this.productRepository = productRepository;
+        this.supplierRepository = supplierRepository;
+        this.productCategoryRepository = productCategoryRepository;
+    }
 
     @Override
     @Transactional
@@ -36,9 +41,16 @@ public class ProductService implements IService<ProductDTO, Integer> {
     @Override
     @Transactional
     public List<ProductDTO> findAll() {
+
         ProductMapper mapper = new ProductMapper(productCategoryRepository, supplierRepository);
-        return StreamSupport.stream(productRepository.findAll().spliterator(), false).map(mapper::convertToDto).
-                collect(Collectors.toList());
+        List<Product> productList = (List<Product>) productRepository.findAll();
+        List<ProductDTO> productReturnList = new ArrayList<>();
+        for (Product product : productList){
+            productReturnList.add(mapper.convertToDto(product));
+        }
+        return productReturnList;
+//        return StreamSupport.stream(productRepository.findAll().spliterator(), false).map(mapper::convertToDto).
+//                collect(Collectors.toList());
     }
 
     @Override

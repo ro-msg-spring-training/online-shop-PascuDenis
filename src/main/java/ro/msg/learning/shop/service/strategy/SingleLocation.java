@@ -38,21 +38,65 @@ public class SingleLocation implements FindLocationStrategy {
         return stockDTOS;
     }
 
+    //    @Override
+//    public List<StockDTO> searchLocation(OrderInputDTO order) {
+//        int countLocations = 0;
+////        Location theRightLocation = null;
+//        List<Location> foundLocations = new ArrayList<>();
+//        List<StockDTO> productsStockToReturn = new ArrayList<>();
+//        Map<ProductOrderInputDTO, List<Location>> foundLocationsMAP = new HashMap<>();
+//
+//        // Iterate through the order products and add every stock found in a list
+//        for (ProductOrderInputDTO productOrderInputDTO : order.getProductInputList()) {
+//            List<StockDTO> foundStocks = getLocationsForOneProduct(productOrderInputDTO.getProductId(), productOrderInputDTO.getQuantity());
+//            if (foundStocks.isEmpty()) {
+//                throw new StockNotFoundException(productOrderInputDTO.getProductId());
+//            }
+//            for (StockDTO stock : foundStocks) {
+//                foundLocations.add(stock.getLocation());
+//            }
+//            foundLocationsMAP.put(productOrderInputDTO, foundLocations);
+//        }
+//
+//        //Get the location list from the first product in the map
+//        Map.Entry<ProductOrderInputDTO, List<Location>> entry = foundLocationsMAP.entrySet().iterator().next();
+//        List<Location> locationsToBeSearched = entry.getValue();
+//
+//        for (int i = 1; i < locationsToBeSearched.size(); i++) {
+//            //Iterate over these location list and check weather each product of the contains the searched location
+//            for (Map.Entry<ProductOrderInputDTO, List<Location>> locationEntry : foundLocationsMAP.entrySet()) {
+//                // If the location list of a product doesn't contain the searched location throw error else increase a counter
+//                if (!locationEntry.getValue().contains(locationsToBeSearched.get(i))) {
+//                    throw new LocationNotFoundException("Couldn't find a single location which contains all products from this order!");
+//                }
+//                countLocations++;
+//
+//                if (foundLocationsMAP.size() == countLocations) {
+////                    theRightLocation = locationsToBeSearched.get(i);
+//
+//                    //TODO: Minor bug
+//                    productsStockToReturn.add(new StockDTO(locationEntry.getKey().getProductId(), locationEntry.getKey().getQuantity(), locationEntry.getValue().get(i)));
+//                }
+//            }
+//        }
+////        return theRightLocation;
+//        return productsStockToReturn;
+//    }
     @Override
     public List<StockDTO> searchLocation(OrderInputDTO order) {
+        boolean found = false;
         int countLocations = 0;
-//        Location theRightLocation = null;
-        List<Location> foundLocations = new ArrayList<>();
         List<StockDTO> productsStockToReturn = new ArrayList<>();
         Map<ProductOrderInputDTO, List<Location>> foundLocationsMAP = new HashMap<>();
 
         // Iterate through the order products and add every stock found in a list
         for (ProductOrderInputDTO productOrderInputDTO : order.getProductInputList()) {
-            List<StockDTO> foundStocks = getLocationsForOneProduct(productOrderInputDTO.getProductId(), productOrderInputDTO.getQuantity());
+            List<Location> foundLocations = new ArrayList<>();
+            List<Stock> foundStocks = stockRepository.findStockLocationsForOneProduct(productOrderInputDTO.getProductId(), productOrderInputDTO.getQuantity());
             if (foundStocks.isEmpty()) {
                 throw new StockNotFoundException(productOrderInputDTO.getProductId());
             }
-            for (StockDTO stock : foundStocks) {
+            for (Stock stock : foundStocks) {
                 foundLocations.add(stock.getLocation());
             }
             foundLocationsMAP.put(productOrderInputDTO, foundLocations);
@@ -62,51 +106,39 @@ public class SingleLocation implements FindLocationStrategy {
         Map.Entry<ProductOrderInputDTO, List<Location>> entry = foundLocationsMAP.entrySet().iterator().next();
         List<Location> locationsToBeSearched = entry.getValue();
 
-        for (int i = 1; i < locationsToBeSearched.size(); i++) {
+        for (Location l : locationsToBeSearched) {
             //Iterate over these location list and check weather each product of the contains the searched location
             for (Map.Entry<ProductOrderInputDTO, List<Location>> locationEntry : foundLocationsMAP.entrySet()) {
+                boolean gef = false;
                 // If the location list of a product doesn't contain the searched location throw error else increase a counter
-                if (!locationEntry.getValue().contains(locationsToBeSearched.get(i))) {
-                    throw new LocationNotFoundException("Couldn't find a single location which contains all products from this order!");
+                if (!locationEntry.getValue().contains(l)) {
+                    productsStockToReturn.clear();
+                    countLocations = 0;
+                    found = false;
+                    break;
+                } else {
+                    countLocations++;
+                    for (Location stock : locationEntry.getValue()) {
+                        if (stock.getId().equals(l.getId())) {
+                            productsStockToReturn.add(new StockMapper(locationRepository, productRepository).convertToDto(stockRepository.findById(stock.getId()).get()));
+                            gef = true;
+                        }
+                    }
+                    if (foundLocationsMAP.size() == countLocations) {
+                        found = true;
+                        break;
+                    }
                 }
-                countLocations++;
-
-                if (foundLocationsMAP.size() == countLocations) {
-//                    theRightLocation = locationsToBeSearched.get(i);
-
-                    //TODO: Minor bug
-                    productsStockToReturn.add(new StockDTO(locationEntry.getKey().getProductId(), locationEntry.getKey().getQuantity(), locationEntry.getValue().get(i)));
-                }
+                if (gef) break;
+            }
+            if (found) {
+                break;
             }
         }
-//        return theRightLocation;
-        return productsStockToReturn;
-    }
-
-    private Location updateStocks(OrderInputDTO order) {
-        Location stockLocation = searchLocation(order).get(1).getLocation();
-        Stock stock = stockRepository.getStockIdForProductWithLocation(stockLocation.getId());
-        for (ProductOrderInputDTO product : order.getProductInputList()) {
-            if (product.getProductId().equals(stock.getProduct().getId())) {
-                int quantityToBeUpdated = stock.getQuantity() - product.getQuantity();
-                stock.setQuantity(quantityToBeUpdated);
-            }
+        if (productsStockToReturn.size() == foundLocationsMAP.size()) {
+            return productsStockToReturn;
+        } else {
+            throw new ProductInStockNotFoundException();
         }
-        return stockLocation;
     }
-
-//    @Override
-//    public Order searchLocation(OrderInputDTO order) {
-//        LocalDateTime orderTimestamp = order.getTimestamp();
-//        Address orderAddress = order.getAddress();
-//
-//        updateStocks(order);
-//
-//        Order placedOrder = new Order();
-//        placedOrder.setLocation(locationContainsAllProducts(order).get(1).getLocation());
-//        placedOrder.setCustomer(new Customer("A", "B", "C", "D", "E"));
-//        placedOrder.setCreatedAt(orderTimestamp);
-//        placedOrder.setAddress(orderAddress);
-//        return placedOrder;
-//    }
 }

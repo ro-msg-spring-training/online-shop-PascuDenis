@@ -1,9 +1,10 @@
 package ro.msg.learning.shop.controller;
 
-import lombok.AllArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
@@ -11,17 +12,20 @@ import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.service.OrderService;
 import ro.msg.learning.shop.service.StockService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
 public class OrderController implements IController<OrderDTO, Integer> {
 
-    @Autowired
     private final StockService stockService;
-    @Autowired
     private final OrderService orderService;
+
+    @Autowired
+    public OrderController(StockService stockService, OrderService orderService) {
+        this.stockService = stockService;
+        this.orderService = orderService;
+    }
+
     private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
 
 //    @Autowired
@@ -32,9 +36,8 @@ public class OrderController implements IController<OrderDTO, Integer> {
 
     @Override
     @GetMapping("/orders/{id}")
-    public OrderDTO getOne(@PathVariable Integer id) {
-
-        return null;
+    public ResponseEntity<OrderDTO> getOne(@PathVariable Integer id) {
+        return new ResponseEntity<>(orderService.findOne(id), HttpStatus.OK) ;
     }
 
     @Override
@@ -64,9 +67,9 @@ public class OrderController implements IController<OrderDTO, Integer> {
     }
 
     @PostMapping("/order")
-    public Order createOrder(@RequestBody OrderInputDTO order){
+    public ResponseEntity<Order> createOrder(@RequestBody OrderInputDTO order){
 //        order.setTimestamp(LocalDateTime.now().withNano(0));
-        return orderService.createOrder(order);
+        return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.OK);
     }
 
 }

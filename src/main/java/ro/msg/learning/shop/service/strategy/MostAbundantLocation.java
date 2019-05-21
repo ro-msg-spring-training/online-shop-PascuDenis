@@ -37,7 +37,7 @@ public class MostAbundantLocation implements FindLocationStrategy {
         List<StockDTO> productsStockToReturn = new ArrayList<>();
 
         for(ProductOrderInputDTO product : order.getProductInputList()){
-            StockDTO foundStock = new StockDTO(product.getProductId(), product.getQuantity(), locationsWithMaxQuantityForOneProduct(product).getId());
+            StockDTO foundStock = new StockDTO(product.getProductId(), product.getQuantity(), locationsWithMaxQuantityForOneProduct(product));
             productsStockToReturn.add(foundStock);
         }
         return productsStockToReturn;

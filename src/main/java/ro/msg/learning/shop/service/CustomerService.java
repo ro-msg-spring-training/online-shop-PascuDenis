@@ -1,7 +1,6 @@
 package ro.msg.learning.shop.service;
 
-import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.CustomerDTO;
@@ -13,9 +12,13 @@ import ro.msg.learning.shop.repository.ICustomerRepository;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class CustomerService implements IService<CustomerDTO, Integer> {
-    ICustomerRepository customerRepository;
+    private final ICustomerRepository customerRepository;
+
+    @Autowired
+    public CustomerService(ICustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     @Override
     @Transactional
@@ -27,7 +30,11 @@ public class CustomerService implements IService<CustomerDTO, Integer> {
     @Override
     @Transactional
     public List<CustomerDTO> findAll() {
-        return (List)customerRepository.findAll();
+        List customerList = (List) customerRepository.findAll();
+        if (customerList.isEmpty()){
+            throw new CustomerNotFoundException("Unable to find any customers");
+        }
+        return customerList;
     }
 
     @Override
@@ -47,4 +54,4 @@ public class CustomerService implements IService<CustomerDTO, Integer> {
     public CustomerDTO update(CustomerDTO entity) {
         return null;
     }
-}
+    }

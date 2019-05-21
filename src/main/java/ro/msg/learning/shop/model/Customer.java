@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"orders"})
+@EqualsAndHashCode(exclude = {"orders"})
 @Entity(name = "Customer")
 @Table(name="Customer")
 @AllArgsConstructor
@@ -23,27 +23,22 @@ public class Customer implements Serializable{
 
     @NonNull
     @Column(nullable = false, name = "FirstName")
-    //@Column(name = "FirstName")
     private String firstName;
 
     @NonNull
     @Column(nullable = false, name = "LastName")
-    //@Column(name = "LastName")
     private String lastName;
 
     @NonNull
     @Column(nullable = false, name = "Username")
-    //@Column(name = "Username")
     private String username;
 
     @NonNull
     @Column(nullable = false, name = "Password")
-    //@Column(name = "Password")
     private String password;
 
     @NonNull
     @Column(nullable = false, name = "EmailAddress")
-    //@Column(name = "EmailAddress")
     private String email;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
