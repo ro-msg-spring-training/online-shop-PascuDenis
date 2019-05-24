@@ -1,8 +1,8 @@
 package ro.msg.learning.shop.service.strategy;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.*;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
@@ -15,13 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class MostAbundantLocation implements FindLocationStrategy {
-    //TODO: use constructor injection
+    private static final Logger logger = LogManager.getLogger(MostAbundantLocation.class.getName());
 
-    @Autowired
-    private IStockRepository stockRepository;
-
+    private final IStockRepository stockRepository;
 
     private Location locationsWithMaxQuantityForOneProduct(ProductOrderInputDTO product) {
         Location productLocation = stockRepository.getLocationWithMaximumQuantityForOneProduct(product.getProductId(), product.getQuantity());

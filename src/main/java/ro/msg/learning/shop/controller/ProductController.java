@@ -57,4 +57,10 @@ public class ProductController implements IController<ProductDTO, Integer> {
     public void remove(@PathVariable Integer id) {
         productService.remove(id);
     }
+
+    @RequestMapping("/")
+    public String someTest(){
+        System.out.println("Salutare");
+        return "Salutare";
+    }
 }

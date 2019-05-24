@@ -23,11 +23,8 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShopApplication.class)
-@ActiveProfiles("test")
 public class MostAbundantLocationTest {
-    @Mock
-    private IStockRepository stockRepository;
-    @InjectMocks
+
     private MostAbundantLocation strategy;
 
     private ProductOrderInputDTO inputProduct1;
@@ -51,7 +48,7 @@ public class MostAbundantLocationTest {
     }
 
     @Test
-    public void singleLocationSuccess() {
+    public void mostAbundantLocationSuccess() {
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
 
         List<StockDTO> stocks = strategy.searchLocation(inputOrder);
@@ -60,7 +57,7 @@ public class MostAbundantLocationTest {
     }
 
     @Test
-    public void singleLocationFail() {
+    public void mostAbundantLocationFail() {
         OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
         try {
             strategy.searchLocation(inputOrder);

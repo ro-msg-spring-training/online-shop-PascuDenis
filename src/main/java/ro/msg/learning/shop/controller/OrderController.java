@@ -1,43 +1,34 @@
 package ro.msg.learning.shop.controller;
 
+import lombok.AllArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
+import ro.msg.learning.shop.exception.FailedToCreateOrderProductException;
+import ro.msg.learning.shop.exception.FailedToCreateOrderStockException;
 import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.service.OrderService;
-import ro.msg.learning.shop.service.StockService;
+import ro.msg.learning.shop.service.UserDetailService;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 public class OrderController implements IController<OrderDTO, Integer> {
 
-    private final StockService stockService;
     private final OrderService orderService;
-
-    @Autowired
-    public OrderController(StockService stockService, OrderService orderService) {
-        this.stockService = stockService;
-        this.orderService = orderService;
-    }
+    private final UserDetailService userDetailService;
 
     private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
-
-//    @Autowired
-//    public OrderController(StockService stockService, OrderService orderService){
-//        this.stockService = stockService;
-//        this.orderService = orderService;
-//    }
 
     @Override
     @GetMapping("/orders/{id}")
     public ResponseEntity<OrderDTO> getOne(@PathVariable Integer id) {
-        return new ResponseEntity<>(orderService.findOne(id), HttpStatus.OK) ;
+        return new ResponseEntity<>(orderService.findOne(id), HttpStatus.OK);
     }
 
     @Override
@@ -67,9 +58,22 @@ public class OrderController implements IController<OrderDTO, Integer> {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderInputDTO order){
-//        order.setTimestamp(LocalDateTime.now().withNano(0));
-        return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.OK);
+    public ResponseEntity<Order> createOrder(@RequestBody OrderInputDTO order) {
+        try {
+            return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.OK);
+        } catch (FailedToCreateOrderStockException e) {
+            Order failedOrder = new Order();
+            failedOrder.setId(-1);
+            return new ResponseEntity<>(failedOrder, HttpStatus.NOT_FOUND);
+        } catch (FailedToCreateOrderProductException e) {
+            Order failedOrder = new Order();
+            failedOrder.setId(-2);
+            return new ResponseEntity<>(failedOrder, HttpStatus.NOT_FOUND);
+        }
     }
 
+    @GetMapping("/user")
+    public String loggedIn() {
+        return "UserModel has loggeed in";
+    }
 }

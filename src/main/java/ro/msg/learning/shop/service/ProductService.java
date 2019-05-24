@@ -1,6 +1,6 @@
 package ro.msg.learning.shop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.ProductDTO;
@@ -18,18 +18,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProductService implements IService<ProductDTO, Integer> {
 
     private final IProductRepository productRepository;
     private final ISupplierRepository supplierRepository;
     private final IProductCategoryRepository productCategoryRepository;
 
-    @Autowired
-    public ProductService(IProductRepository productRepository, ISupplierRepository supplierRepository, IProductCategoryRepository productCategoryRepository) {
-        this.productRepository = productRepository;
-        this.supplierRepository = supplierRepository;
-        this.productCategoryRepository = productCategoryRepository;
-    }
 
     @Override
     @Transactional

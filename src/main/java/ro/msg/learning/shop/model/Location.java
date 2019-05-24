@@ -9,6 +9,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "Location")
 @Table(name = "Location")
 public class Location implements Serializable {

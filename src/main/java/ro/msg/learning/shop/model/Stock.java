@@ -11,6 +11,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(exclude = {"product", "location"})
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Stock")
 public class Stock implements Serializable {
 

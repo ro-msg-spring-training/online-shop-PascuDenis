@@ -1,12 +1,17 @@
 package ro.msg.learning.shop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
+import ro.msg.learning.shop.exception.FailedToCreateOrderProductException;
+import ro.msg.learning.shop.exception.FailedToCreateOrderStockException;
+import ro.msg.learning.shop.exception.ProductNotFoundException;
 import ro.msg.learning.shop.exception.StockNotFoundException;
 import ro.msg.learning.shop.mapping.OrderMapper;
 import ro.msg.learning.shop.model.*;
@@ -18,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class OrderService implements IService<OrderDTO, Integer> {
 
     private final IAddressRepository addressRepository;
@@ -26,17 +32,9 @@ public class OrderService implements IService<OrderDTO, Integer> {
     private final IOrderRepository orderRepository;
     private final IStockRepository stockRepository;
 
-    @Autowired
-    public OrderService(IAddressRepository addressRepository, ICustomerRepository customerRepository, ILocationRepository locationRepository, IOrderRepository orderRepository, IStockRepository stockRepository, FindLocationStrategy strategy) {
-        this.addressRepository = addressRepository;
-        this.customerRepository = customerRepository;
-        this.locationRepository = locationRepository;
-        this.orderRepository = orderRepository;
-        this.stockRepository = stockRepository;
-        this.strategy = strategy;
-    }
-
     private FindLocationStrategy strategy;
+
+    private static final Logger logger = LogManager.getLogger(OrderService.class.getName());
 
     @Override
     @Transactional
@@ -50,7 +48,7 @@ public class OrderService implements IService<OrderDTO, Integer> {
         OrderMapper mapper = new OrderMapper(addressRepository, customerRepository, locationRepository);
         List<Order> orderList = (List<Order>) orderRepository.findAll();
         List<OrderDTO> orderReturnList = new ArrayList<>();
-        for (Order order : orderList){
+        for (Order order : orderList) {
             orderReturnList.add(mapper.convertToDto(order));
         }
         return orderReturnList;
@@ -78,12 +76,21 @@ public class OrderService implements IService<OrderDTO, Integer> {
 
     @Transactional
     public Order createOrder(OrderInputDTO inputOrder) {
+        for (Stock stock : stockRepository.findAll()) {
+            logger.info(stock);
+        }
+
         int updatedStock = 0;
+        Integer productId = -1;
         List<StockDTO> searchedProducts = new ArrayList<>();
         try {
             searchedProducts = strategy.searchLocation(inputOrder);
         } catch (StockNotFoundException e) {
             System.out.println(e);
+            throw new FailedToCreateOrderStockException();
+        } catch (ProductNotFoundException e){
+            System.out.println(e);
+            throw new FailedToCreateOrderProductException();
         }
 
         for (StockDTO s : searchedProducts) {
@@ -98,12 +105,17 @@ public class OrderService implements IService<OrderDTO, Integer> {
                     customerRepository.findById(1).get(),
                     orderAddress
             );
-            System.out.println("\n" + order);
-            orderRepository.save(order);
 
             for (ProductOrderInputDTO product : inputOrder.getProductInputList()) {
                 for (StockDTO stock : searchedProducts) {
-                    if (stock.getProductId().equals(product.getProductId())) {
+                    if (stock.getProductId() != null) {
+                        productId = stock.getProductId();
+                    } else if (stock.getProduct().getId() != null) {
+                        productId = stock.getProduct().getId();
+                    }
+
+                    System.out.println("    " + product.getProductId());
+                    if (productId == product.getProductId()) {
                         int initialStock = stock.getQuantity();
                         Integer stockIdAfterProductIdAndLocationId = stockRepository.findStockIdAfterProductIdAndLocationId(product.getProductId(), stock.getLocation().getId());
                         Stock foundStock = stockRepository.findById(stockIdAfterProductIdAndLocationId).get();
@@ -116,9 +128,11 @@ public class OrderService implements IService<OrderDTO, Integer> {
             }
             System.out.println(updatedStock);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(e.toString());
+            System.out.println("Salut " + e.toString());
         }
 
+        System.out.println("\n" + order);
+        orderRepository.save(order);
         return order;
     }
 }

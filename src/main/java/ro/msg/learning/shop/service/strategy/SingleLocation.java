@@ -1,11 +1,8 @@
 package ro.msg.learning.shop.service.strategy;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import ro.msg.learning.shop.controller.ProductController;
 import ro.msg.learning.shop.dto.*;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
@@ -17,18 +14,13 @@ import ro.msg.learning.shop.repository.*;
 import java.util.*;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class SingleLocation implements FindLocationStrategy {
-    //TODO: Use constructor injection
 
-    private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
+    private static final Logger logger = LogManager.getLogger(SingleLocation.class.getName());
 
-    @Autowired
-    private IProductRepository productRepository;
-    @Autowired
-    private ILocationRepository locationRepository;
-    @Autowired
-    private IStockRepository stockRepository;
+    private final IProductRepository productRepository;
+    private final ILocationRepository locationRepository;
+    private final IStockRepository stockRepository;
 
     private List<StockDTO> getLocationsForOneProduct(Integer productId, Integer quantity) {
         List<StockDTO> stockDTOS = new ArrayList<>();
@@ -38,52 +30,9 @@ public class SingleLocation implements FindLocationStrategy {
         return stockDTOS;
     }
 
-    //    @Override
-//    public List<StockDTO> searchLocation(OrderInputDTO order) {
-//        int countLocations = 0;
-////        Location theRightLocation = null;
-//        List<Location> foundLocations = new ArrayList<>();
-//        List<StockDTO> productsStockToReturn = new ArrayList<>();
-//        Map<ProductOrderInputDTO, List<Location>> foundLocationsMAP = new HashMap<>();
-//
-//        // Iterate through the order products and add every stock found in a list
-//        for (ProductOrderInputDTO productOrderInputDTO : order.getProductInputList()) {
-//            List<StockDTO> foundStocks = getLocationsForOneProduct(productOrderInputDTO.getProductId(), productOrderInputDTO.getQuantity());
-//            if (foundStocks.isEmpty()) {
-//                throw new StockNotFoundException(productOrderInputDTO.getProductId());
-//            }
-//            for (StockDTO stock : foundStocks) {
-//                foundLocations.add(stock.getLocation());
-//            }
-//            foundLocationsMAP.put(productOrderInputDTO, foundLocations);
-//        }
-//
-//        //Get the location list from the first product in the map
-//        Map.Entry<ProductOrderInputDTO, List<Location>> entry = foundLocationsMAP.entrySet().iterator().next();
-//        List<Location> locationsToBeSearched = entry.getValue();
-//
-//        for (int i = 1; i < locationsToBeSearched.size(); i++) {
-//            //Iterate over these location list and check weather each product of the contains the searched location
-//            for (Map.Entry<ProductOrderInputDTO, List<Location>> locationEntry : foundLocationsMAP.entrySet()) {
-//                // If the location list of a product doesn't contain the searched location throw error else increase a counter
-//                if (!locationEntry.getValue().contains(locationsToBeSearched.get(i))) {
-//                    throw new LocationNotFoundException("Couldn't find a single location which contains all products from this order!");
-//                }
-//                countLocations++;
-//
-//                if (foundLocationsMAP.size() == countLocations) {
-////                    theRightLocation = locationsToBeSearched.get(i);
-//
-//                    //TODO: Minor bug
-//                    productsStockToReturn.add(new StockDTO(locationEntry.getKey().getProductId(), locationEntry.getKey().getQuantity(), locationEntry.getValue().get(i)));
-//                }
-//            }
-//        }
-////        return theRightLocation;
-//        return productsStockToReturn;
-//    }
     @Override
     public List<StockDTO> searchLocation(OrderInputDTO order) {
+        //TODO: optimize the method using Java8 streams -> ArrayList retainAll()
         boolean found = false;
         int countLocations = 0;
         List<StockDTO> productsStockToReturn = new ArrayList<>();
@@ -94,6 +43,9 @@ public class SingleLocation implements FindLocationStrategy {
             List<Location> foundLocations = new ArrayList<>();
             List<Stock> foundStocks = stockRepository.findStockLocationsForOneProduct(productOrderInputDTO.getProductId(), productOrderInputDTO.getQuantity());
             if (foundStocks.isEmpty()) {
+                if (stockRepository.findStockForOneProductId(productOrderInputDTO.getProductId()).isEmpty()) {
+                    throw new ProductNotFoundException(productOrderInputDTO.getProductId());
+                }
                 throw new StockNotFoundException(productOrderInputDTO.getProductId());
             }
             for (Stock stock : foundStocks) {
@@ -109,7 +61,7 @@ public class SingleLocation implements FindLocationStrategy {
         for (Location l : locationsToBeSearched) {
             //Iterate over these location list and check weather each product of the contains the searched location
             for (Map.Entry<ProductOrderInputDTO, List<Location>> locationEntry : foundLocationsMAP.entrySet()) {
-                boolean gef = false;
+                boolean goNext = false;
                 // If the location list of a product doesn't contain the searched location throw error else increase a counter
                 if (!locationEntry.getValue().contains(l)) {
                     productsStockToReturn.clear();
@@ -121,7 +73,7 @@ public class SingleLocation implements FindLocationStrategy {
                     for (Location stock : locationEntry.getValue()) {
                         if (stock.getId().equals(l.getId())) {
                             productsStockToReturn.add(new StockMapper(locationRepository, productRepository).convertToDto(stockRepository.findById(stock.getId()).get()));
-                            gef = true;
+                            goNext = true;
                         }
                     }
                     if (foundLocationsMAP.size() == countLocations) {
@@ -129,7 +81,7 @@ public class SingleLocation implements FindLocationStrategy {
                         break;
                     }
                 }
-                if (gef) break;
+                if (goNext) break;
             }
             if (found) {
                 break;

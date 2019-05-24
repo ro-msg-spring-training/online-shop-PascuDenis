@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity(name = "Address")
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Address")
 public class Address implements Serializable {
 

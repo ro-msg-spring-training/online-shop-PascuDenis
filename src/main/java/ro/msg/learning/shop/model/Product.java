@@ -65,5 +65,15 @@ public class Product implements Serializable {
         this.productCategory = productCategory;
         this.supplier = supplier;
     }
+
+    public Product(Integer id,  String name, String description, BigDecimal price, Double weight, ProductCategory productCategory, Supplier supplier) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.weight = weight;
+        this.productCategory = productCategory;
+        this.supplier = supplier;
+    }
 }
 

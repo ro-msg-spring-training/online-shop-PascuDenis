@@ -3,24 +3,27 @@ package ro.msg.learning.shop.strategy;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
 import ro.msg.learning.shop.exception.StockNotFoundException;
-import ro.msg.learning.shop.repository.IStockRepository;
+import ro.msg.learning.shop.model.*;
+import ro.msg.learning.shop.repository.*;
+import ro.msg.learning.shop.service.strategy.FindLocationStrategy;
 import ro.msg.learning.shop.service.strategy.SingleLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SingleLocationTest {
-    @Mock
-    private IStockRepository stockRepository;
-    @InjectMocks
-    private SingleLocation strategy;
+    private IProductRepository productRepository = Mockito.mock(IProductRepository.class);
+    private ILocationRepository locationRepository = Mockito.mock(ILocationRepository.class);
+    private IStockRepository stockRepository = Mockito.mock(IStockRepository.class);
+
+
+    private FindLocationStrategy strategy;
+
 
     private ProductOrderInputDTO inputProduct1;
     private ProductOrderInputDTO inputProduct2;
@@ -28,10 +31,10 @@ public class SingleLocationTest {
 
     private List<ProductOrderInputDTO> inputProducts;
 
+    private Address address1;
+
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         inputProduct1 = new ProductOrderInputDTO(1, 20);
         inputProduct2 = new ProductOrderInputDTO(2, 20);
         inputProduct3 = new ProductOrderInputDTO(3, 20);
@@ -40,12 +43,18 @@ public class SingleLocationTest {
 
         inputProducts.add(inputProduct1);
         inputProducts.add(inputProduct2);
+
         inputProducts.add(inputProduct3);
+
+        address1 = new Address(1, "County01", "City01", "County01", "Street01");
+
+        strategy = new SingleLocation(productRepository, locationRepository, stockRepository);
+        System.out.println(stockRepository.findAll());
     }
 
     @Test
     public void singelLocationSuccess() {
-        OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
+        OrderInputDTO inputOrder = new OrderInputDTO(address1, inputProducts);
 
         List<StockDTO> stocks = strategy.searchLocation(inputOrder);
         Assertions.assertThat(stocks).isNotEqualTo(null);
@@ -54,14 +63,13 @@ public class SingleLocationTest {
 
     @Test
     public void singleLocationFail() {
-        OrderInputDTO inputOrder = new OrderInputDTO(null, inputProducts);
+        OrderInputDTO inputOrder = new OrderInputDTO(address1, inputProducts);
         try {
             strategy.searchLocation(inputOrder);
-        } catch (StockNotFoundException e){
+        } catch (StockNotFoundException e) {
             System.out.println("Failed to create an order with single location strategy");
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             System.out.println("Some other error occurred");
         }
-
     }
 }

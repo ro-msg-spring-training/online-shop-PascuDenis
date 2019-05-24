@@ -92,15 +92,6 @@ public class StockService implements IService<StockDTO, Integer> {
         }
     }
 
-    @Transactional
-    public List<Stock> findAllStocks(){
-        List<Stock> stocks = stockRepository.findAllStocks();
-        for (Stock s : stocks){
-            System.out.println(s);
-        }
-        return stocks;
-    }
-
     public void findLocationWithMaxQuantity(Integer productId, Integer quantity){
         System.out.println(stockRepository.getLocationWithMaximumQuantityForOneProduct(productId, quantity));
     }

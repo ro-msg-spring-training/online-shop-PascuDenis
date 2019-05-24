@@ -27,6 +27,12 @@ public class StockDTO {
         this.location = location;
     }
 
+    public StockDTO(Product product, Integer quantity, Location location) {
+        this.product = product;
+        this.quantity = quantity;
+        this.location = location;
+    }
+
     private Product product;
     private Location location;
 }

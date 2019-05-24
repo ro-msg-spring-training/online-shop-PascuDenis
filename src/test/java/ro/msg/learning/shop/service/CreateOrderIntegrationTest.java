@@ -1,13 +1,13 @@
 package ro.msg.learning.shop.service;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import ro.msg.learning.shop.ShopApplication;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
@@ -24,17 +24,11 @@ import java.util.List;
 @Configuration
 public class CreateOrderIntegrationTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mvc;
+    @Autowired
     private OrderService orderService;
 
-    @Before
-    public void init() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Test
     public void createOrderSucessfully() {
