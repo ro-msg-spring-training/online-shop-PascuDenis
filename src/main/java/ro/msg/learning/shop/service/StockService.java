@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,17 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class StockService implements IService<StockDTO, Integer> {
     private final ILocationRepository locationRepository;
     private final IProductRepository productRepository;
     private final IStockRepository stockRepository;
-
-    @Autowired
-    public StockService(ILocationRepository locationRepository, IProductRepository productRepository, IStockRepository stockRepository) {
-        this.locationRepository = locationRepository;
-        this.productRepository = productRepository;
-        this.stockRepository = stockRepository;
-    }
 
     @Override
     @Transactional
@@ -36,7 +31,7 @@ public class StockService implements IService<StockDTO, Integer> {
     @Override
     @Transactional
     public List<StockDTO> findAll() {
-        StockMapper mapper = new StockMapper(locationRepository, productRepository);
+      StockMapper mapper = new StockMapper(locationRepository, productRepository);
         List<Stock> stockList = (List<Stock>) stockRepository.findAll();
         List<StockDTO> stockReturnList = new ArrayList<>();
         for (Stock stock : stockList){

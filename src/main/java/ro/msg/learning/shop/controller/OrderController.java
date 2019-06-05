@@ -5,23 +5,48 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.filter.OncePerRequestFilter;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.exception.FailedToCreateOrderProductException;
 import ro.msg.learning.shop.exception.FailedToCreateOrderStockException;
 import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.service.OrderService;
-import ro.msg.learning.shop.service.UserDetailService;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
+
+@Component
+class Filter2 extends OncePerRequestFilter {
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    throws ServletException, IOException {
+    response.setHeader("Cache-Control", "no-store"); // HTTP 1.1.
+    response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+    response.setHeader("Expires", "0"); // Proxies.
+    response.setHeader("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with");
+    response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS, HEAD"); // also added header to allow POST, GET method to be available
+    response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Allow", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+    filterChain.doFilter(request, response);
+  }
+}
+
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "https://localhost:4200")
 public class OrderController implements IController<OrderDTO, Integer> {
 
     private final OrderService orderService;
-    private final UserDetailService userDetailService;
 
     private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
 
@@ -59,6 +84,7 @@ public class OrderController implements IController<OrderDTO, Integer> {
 
     @PostMapping("/order")
     public ResponseEntity<Order> createOrder(@RequestBody OrderInputDTO order) {
+      System.out.println(order);
         try {
             return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.OK);
         } catch (FailedToCreateOrderStockException e) {

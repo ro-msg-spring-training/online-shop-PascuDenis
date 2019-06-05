@@ -12,7 +12,7 @@ import ro.msg.learning.shop.service.SupplierService;
 
 import java.util.List;
 
-//@RequestMapping("/supplier")
+@RestController
 public class SupplierController implements IController<SupplierDTO, Integer> {
 
     private final SupplierService supplierService;
@@ -35,7 +35,7 @@ public class SupplierController implements IController<SupplierDTO, Integer> {
     }
 
     @Override
-    @GetMapping("/supplier")
+    @GetMapping("/suppliers")
     public List<SupplierDTO> getAll() {
         return supplierService.findAll();
     }

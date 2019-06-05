@@ -18,12 +18,6 @@ public class LocationDTO {
     private String name;
     private Integer addressId;
 
-    public LocationDTO(Integer id, String name, Integer addressId) {
-        this.id = id;
-        this.name = name;
-        this.addressId = addressId;
-    }
-
     private Address address;
     private List<Order> orders;
     private List<Stock> stocks;

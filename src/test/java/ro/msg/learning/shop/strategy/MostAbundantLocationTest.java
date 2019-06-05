@@ -4,18 +4,14 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.ShopApplication;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.dto.orderinput.OrderInputDTO;
 import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
 import ro.msg.learning.shop.exception.StockNotFoundException;
-import ro.msg.learning.shop.repository.IStockRepository;
 import ro.msg.learning.shop.service.strategy.MostAbundantLocation;
 
 import java.util.ArrayList;

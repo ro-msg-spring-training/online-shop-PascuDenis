@@ -10,16 +10,10 @@ import ro.msg.learning.shop.model.Product;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockDTO {
-    private Integer id;
-    private Integer quantity;
-    private Integer productId;
-    private Integer locationId;
-
-    public StockDTO(Integer productId, Integer quantity, Integer locationId) {
-        this.productId = productId;
-        this.quantity = quantity;
-        this.locationId = locationId;
-    }
+  private Integer id;
+  private Integer productId;
+  private Integer quantity;
+  private Integer locationId;
 
     public StockDTO(Integer productId, Integer quantity, Location location) {
         this.productId = productId;
@@ -27,12 +21,7 @@ public class StockDTO {
         this.location = location;
     }
 
-    public StockDTO(Product product, Integer quantity, Location location) {
-        this.product = product;
-        this.quantity = quantity;
-        this.location = location;
-    }
-
     private Product product;
     private Location location;
+
 }

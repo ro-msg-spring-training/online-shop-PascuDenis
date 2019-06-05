@@ -1,10 +1,10 @@
 INSERT INTO Customer(CustomerId, FirstName, LastName, Username, Password, EmailAddress) VALUES
-(1, 'FirstName01', 'LastName01', 'Username01', 'Password01', 'Email01'),
-(2, 'FirstName02', 'LastName02', 'Username02', 'Password02', 'Email02'),
-(3, 'FirstName03', 'LastName03', 'Username03', 'Password03', 'Email03'),
-(4, 'FirstName04', 'LastName04', 'Username04', 'Password04', 'Email04'),
-(5, 'FirstName05', 'LastName05', 'Username05', 'Password05', 'Email05'),
-(6, 'FirstName06', 'LastName06', 'Username06', 'Password06', 'Email06');
+(1, 'FirstName01', 'LastName01', 'Username01', 'Password01', 'black.knight171@yahoo.com'),
+(2, 'FirstName02', 'LastName02', 'Username02', 'Password02', 'black.knight171@yahoo.com'),
+(3, 'FirstName03', 'LastName03', 'Username03', 'Password03', 'black.knight171@yahoo.com'),
+(4, 'FirstName04', 'LastName04', 'Username04', 'Password04', 'black.knight171@yahoo.com'),
+(5, 'FirstName05', 'LastName05', 'Username05', 'Password05', 'black.knight171@yahoo.com'),
+(6, 'FirstName06', 'LastName06', 'Username06', 'Password06', 'black.knight171@yahoo.com');
 
 INSERT INTO Address(AddressId, Country, City, County, Street) VALUES
 (1, 'AddressCountry01','AddressCity01','AddressCounty01','AddressStreetAddress01'),
@@ -28,19 +28,19 @@ INSERT INTO Revenue(RevenueId, LocationID, Date_, Sum_) VALUES
 (5, 5,'2015-11-13',5680);
 
 INSERT INTO Supplier(SupplierId, Name) VALUES
-(1, 'Name01'),
-(2, 'Name02'),
-(3, 'Name03'),
-(4, 'Name04'),
-(5, 'Name05');
+(1, 'SupplierName01'),
+(2, 'SupplierName02'),
+(3, 'SupplierName03'),
+(4, 'SupplierName04'),
+(5, 'SupplierName05');
 
 
 INSERT INTO ProductCategory(ProductCategoryId, Name, Description) VALUES
-(1, 'Name01','Description01'),
-(2, 'Name02','Description02'),
-(3, 'Name03','Description03'),
-(4, 'Name04','Description04'),
-(5, 'Name05','Description05');
+(1, 'CategoryName01','Description01'),
+(2, 'CategoryName02','Description02'),
+(3, 'CategoryName03','Description03'),
+(4, 'CategoryName04','Description04'),
+(5, 'CategoryName05','Description05');
 
 INSERT INTO Product(ProductId, Name,Description, Price, Weight, ProductCategoryId, SupplierId, ImageUrl) VALUES
 (1, 'Name01','Description01', 12,23,1,4,'Url01'),
@@ -50,26 +50,26 @@ INSERT INTO Product(ProductId, Name,Description, Price, Weight, ProductCategoryI
 (5, 'Name05','Description05', 63,22,1,1,'Url05');
 
 INSERT INTO Stock(StockId, ProductId, LocationId, Quantity) VALUES
-(1, 1,1,961),
-(2, 1,2,962),
-(3, 1,3,963),
-(4, 1,4,964),
-(5, 2,1,965),
-(6, 2,2,966),
-(7, 2,3,967),
-(8, 3,1,968),
-(9, 3,2,969),
-(10, 3,3,970),
-(11, 4,1,941),
-(12, 4,2,942),
-(13, 4,3,943),
-(14, 4,4,944),
-(15, 4,5,945),
-(16, 5,1,946),
-(17, 5,2,947),
-(18, 5,3,948),
-(19, 5,4,949),
-(20, 5,5,950);
+(1, 1, 1, 961),
+(2, 1, 2, 962),
+(3, 1, 3, 963),
+(4, 1, 4, 964),
+(5, 2, 1, 965),
+(6, 2, 2, 966),
+(7, 2, 3, 967),
+(8, 3, 1, 968),
+(9, 3, 2, 969),
+(10, 3, 3, 970),
+(11, 4, 1, 941),
+(12, 4, 2, 942),
+(13, 4, 3, 943),
+(14, 4, 4, 944),
+(15, 4, 5, 945),
+(16, 5, 1, 946),
+(17, 5, 2, 947),
+(18, 5, 3, 948),
+(19, 5, 4, 949),
+(20, 5, 5, 950);
 
 INSERT INTO Orders(OrdersId, ShippedFrom, CustomerId, AddressId, CreatedAt) VALUES
 (1, 1, 2, 1, '2015-11-13'),

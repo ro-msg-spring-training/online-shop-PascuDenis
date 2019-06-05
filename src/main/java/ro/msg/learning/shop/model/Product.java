@@ -15,6 +15,7 @@ import java.util.Set;
 @Table(name = "Product")
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Product implements Serializable {
 
     @Id
@@ -57,23 +58,5 @@ public class Product implements Serializable {
     @JsonIgnore
     private String imageURL;
 
-    public Product(String name, String description, BigDecimal price, Double weight, ProductCategory productCategory, Supplier supplier) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.weight = weight;
-        this.productCategory = productCategory;
-        this.supplier = supplier;
-    }
-
-    public Product(Integer id,  String name, String description, BigDecimal price, Double weight, ProductCategory productCategory, Supplier supplier) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.weight = weight;
-        this.productCategory = productCategory;
-        this.supplier = supplier;
-    }
 }
 
