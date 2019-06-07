@@ -1,7 +1,6 @@
 package ro.msg.learning.shop.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.StockDTO;
@@ -90,27 +89,4 @@ public class StockService implements IService<StockDTO, Integer> {
     public void findLocationWithMaxQuantity(Integer productId, Integer quantity){
         System.out.println(stockRepository.getLocationWithMaximumQuantityForOneProduct(productId, quantity));
     }
-//    @Transactional
-//    public boolean getStockWithMaxQuantityForOneProduct(Integer stockId, Integer productId, Integer quantity) {
-////        for(StockDTO stock : stocks) {
-////            if (stock.getProductId().equals(product.getId()) && stock.getQuantity() >= quantity) {
-////                return stock;
-////            }
-////        }
-//
-//        StockDTO foundStocks = findOne(stockId);
-//
-//        for (StockDTO stock : stocks) {
-//            if (stock.getProductId().equals(productId) && stock.getQuantity() >= quantity) {
-//                maxQuantity = stock.getQuantity();
-//                foundStocks = stock;
-//            }
-//        }
-//
-//        if (maxQuantity == -1)
-//            throw new ProductInStockNotFoundException(productId);
-//        return foundStocks;
-//    }
-
-
 }

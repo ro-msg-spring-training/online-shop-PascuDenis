@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,13 +21,12 @@ public class CustomerDetailService implements UserDetailsService {
   private final ICustomerRepository customerRepository;
 
   @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
+  private BCryptPasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
+  public UserDetails loadUserByUsername(String username) {
     BCryptPasswordEncoder encoder = passwordEncoder();
     Customer customer = customerRepository.findCustomerAfterUsername(username).orElse(null);
     System.out.println(customer);

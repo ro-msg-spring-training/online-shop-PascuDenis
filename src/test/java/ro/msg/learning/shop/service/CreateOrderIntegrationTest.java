@@ -15,6 +15,8 @@ import ro.msg.learning.shop.dto.orderinput.ProductOrderInputDTO;
 import ro.msg.learning.shop.exception.StockNotFoundException;
 import ro.msg.learning.shop.model.Order;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class CreateOrderIntegrationTest {
 
 
     @Test
-    public void createOrderSucessfully() {
+    public void createOrderSucessfully() throws IOException, MessagingException {
         ProductOrderInputDTO inputProduct1 = new ProductOrderInputDTO(1, 20);
         ProductOrderInputDTO inputProduct2 = new ProductOrderInputDTO(2, 20);
         ProductOrderInputDTO inputProduct3 = new ProductOrderInputDTO(3, 20);
@@ -77,6 +79,8 @@ public class CreateOrderIntegrationTest {
             System.out.println("Failed to create an order due to missing stocks");
         } catch (RuntimeException e){
             System.out.println("Some other error occurred");
+        } catch (MessagingException | IOException e) {
+          e.printStackTrace();
         }
     }
 }

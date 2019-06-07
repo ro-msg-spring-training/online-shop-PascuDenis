@@ -15,6 +15,7 @@ import ro.msg.learning.shop.exception.FailedToCreateOrderStockException;
 import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.service.OrderService;
 
+import javax.mail.*;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,60 +47,61 @@ class Filter2 extends OncePerRequestFilter {
 @CrossOrigin(origins = "https://localhost:4200")
 public class OrderController implements IController<OrderDTO, Integer> {
 
-    private final OrderService orderService;
+  private final OrderService orderService;
 
-    private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
+  private static final Logger logger = LogManager.getLogger(ProductController.class.getName());
 
-    @Override
-    @GetMapping("/orders/{id}")
-    public ResponseEntity<OrderDTO> getOne(@PathVariable Integer id) {
-        return new ResponseEntity<>(orderService.findOne(id), HttpStatus.OK);
+  @Override
+  @GetMapping("/orders/{id}")
+  public ResponseEntity<OrderDTO> getOne(@PathVariable Integer id) {
+    return new ResponseEntity<>(orderService.findOne(id), HttpStatus.OK);
+  }
+
+  @Override
+  @GetMapping("/orders")
+  public List<OrderDTO> getAll() {
+    return orderService.findAll();
+  }
+
+  @Override
+  public OrderDTO save(@RequestBody OrderDTO entity) {
+    return null;
+  }
+
+  @PostMapping("/orders/s")
+  public OrderDTO save(@RequestBody OrderInputDTO orderInputDTO) {
+    return null;
+  }
+
+  @Override
+  public OrderDTO update(OrderDTO entity) {
+    return null;
+  }
+
+  @Override
+  public void remove(Integer id) {
+
+  }
+
+  @PostMapping("/order")
+  public ResponseEntity<Order> createOrder(@RequestBody OrderInputDTO order) throws IOException, MessagingException {
+    System.out.println(order);
+    try {
+      return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.OK);
+    } catch (FailedToCreateOrderStockException e) {
+      Order failedOrder = new Order();
+      failedOrder.setId(-1);
+      return new ResponseEntity<>(failedOrder, HttpStatus.NOT_FOUND);
+    } catch (FailedToCreateOrderProductException e) {
+      Order failedOrder = new Order();
+      failedOrder.setId(-2);
+      return new ResponseEntity<>(failedOrder, HttpStatus.NOT_FOUND);
     }
+  }
 
-    @Override
-    @GetMapping("/orders")
-    public List<OrderDTO> getAll() {
-        return orderService.findAll();
-    }
+  @GetMapping("/user")
+  public String loggedIn() {
+    return "UserModel has loggeed in";
+  }
 
-    @Override
-    public OrderDTO save(@RequestBody OrderDTO entity) {
-        return null;
-    }
-
-    @PostMapping("/orders/s")
-    public OrderDTO save(@RequestBody OrderInputDTO orderInputDTO) {
-        return null;
-    }
-
-    @Override
-    public OrderDTO update(OrderDTO entity) {
-        return null;
-    }
-
-    @Override
-    public void remove(Integer id) {
-
-    }
-
-    @PostMapping("/order")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderInputDTO order) {
-      System.out.println(order);
-        try {
-            return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.OK);
-        } catch (FailedToCreateOrderStockException e) {
-            Order failedOrder = new Order();
-            failedOrder.setId(-1);
-            return new ResponseEntity<>(failedOrder, HttpStatus.NOT_FOUND);
-        } catch (FailedToCreateOrderProductException e) {
-            Order failedOrder = new Order();
-            failedOrder.setId(-2);
-            return new ResponseEntity<>(failedOrder, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/user")
-    public String loggedIn() {
-        return "UserModel has loggeed in";
-    }
 }

@@ -38,14 +38,14 @@ public class SingleLocation implements FindLocationStrategy {
 
   @Override
   public List<StockDTO> searchLocation(OrderInputDTO order) {
-    //TODO: optimize the method using Java8 streams -> ArrayList retainAll()
+//TODO: optimize the method using Java8 streams -> ArrayList retainAll()
     boolean found = false;
     int countLocations = 0;
     List<StockDTO> productsStockToReturn = new ArrayList<>();
     Map<ProductOrderInputDTO, List<Location>> foundLocationsMAP = new HashMap<>();
 
     // Iterate through the order products and add every stock found in a list
-    for (ProductOrderInputDTO productOrderInputDTO : order.getProductInputList()) {
+    order.getProductInputList().stream().forEach(productOrderInputDTO -> {
       List<Location> foundLocations = new ArrayList<>();
       List<Stock> foundStocks = stockRepository.findStockLocationsForOneProduct(productOrderInputDTO.getProductId(), productOrderInputDTO.getQuantity());
       if (foundStocks.isEmpty()) {
@@ -58,7 +58,7 @@ public class SingleLocation implements FindLocationStrategy {
         foundLocations.add(stock.getLocation());
       }
       foundLocationsMAP.put(productOrderInputDTO, foundLocations);
-    }
+    });
 
     //Get the location list from the first product in the map
     Map.Entry<ProductOrderInputDTO, List<Location>> entry = foundLocationsMAP.entrySet().iterator().next();
